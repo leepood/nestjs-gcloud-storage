@@ -19,12 +19,15 @@ export interface UploadedFileMetadata {
 @Injectable()
 export class GCloudStorageService {
   private readonly logger = new Logger(GCloudStorageService.name);
-  public storage: Storage = new Storage();
+  public storage: Storage;
   public bucket: Bucket = null;
 
   constructor(@Inject(GCLOUD_STORAGE_MODULE_OPTIONS) private readonly options: GCloudStorageOptions) {
     this.logger.log(`GCloudStorageService.options ${options}`);
-
+    this.storage = new Storage({
+      keyFile: this.options.keyFile,
+      keyFilename: this.options.keyFilename,
+    });
     const bucketName = this.options.defaultBucketname;
     this.bucket = this.storage.bucket(bucketName);
   }
